@@ -19,6 +19,7 @@ func main() {
 	app := fiber.New()
 
 	// initialize and open migrations
+	// open only one time and use that connection
 	database.ConnectDB()
 
 	// default route
