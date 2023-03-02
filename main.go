@@ -18,6 +18,12 @@ import (
 func main() {
 	app := fiber.New()
 
+	// load env file
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
 	// initialize and open migrations
 	// open only one time and use that connection
 	database.ConnectDB()
@@ -26,12 +32,6 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) {
 		c.Send("Go api with fiber")
 	})
-
-	// load env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 
 	// verify env
 	PORT := os.Getenv("PORT")
