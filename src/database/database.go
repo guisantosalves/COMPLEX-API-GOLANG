@@ -8,13 +8,17 @@ import (
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+type DbInstance struct {
+	Db *gorm.DB
+}
+
+var DB DbInstance
 
 func ConnectDB() {
 
 	// change the user and password in another project
 	// host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai
-	dbURL := "host=localhost user=postgres password=123456 dbname=book port=5432 sslmode=disable"
+	dbURL := "host=localhost user=postgres password=123456 dbname=book port=5431 sslmode=disable"
 
 	// "postgres://postgres:123456@localhost:5432/book"
 
@@ -30,5 +34,8 @@ func ConnectDB() {
 	database.AutoMigrate(&models.Book{})
 
 	// pass for DB
-	DB = database
+	// DB receive a DbInstance
+	DB = DbInstance{
+		Db: database,
+	}
 }

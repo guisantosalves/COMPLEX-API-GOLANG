@@ -1,22 +1,23 @@
 package controllers
 
 import (
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"github.com/guisantosalves/go-api-fiber/src/database"
 	"github.com/guisantosalves/go-api-fiber/src/models"
 )
 
-func GetBooks(c *fiber.Ctx) {
-	c.Send("getBooks")
+func GetBooks(c *fiber.Ctx) error {
+	return c.SendString("getBooks")
 }
 
-func GetBookById(c *fiber.Ctx) {
-	c.Send("getBooksbyid")
+func GetBookById(c *fiber.Ctx) error {
+	return c.SendString("getBooksbyid")
 }
 
 func NewBook(c *fiber.Ctx) error {
 	// like an instance
 	body := models.Book{}
+	dta := database.DB.Db
 
 	// parsing body and mapping it into models.Book struct
 	if err := c.BodyParser(&body); err != nil {
@@ -31,13 +32,13 @@ func NewBook(c *fiber.Ctx) error {
 	book.Author = body.Author
 
 	//insert db
-	if result := database.DB.Create(&book); result.Error != nil {
-		return fiber.NewError(fiber.StatusNotFound, result.Error.Error())
+	if result := dta.Create(&book); result != nil {
+		return fiber.NewError(fiber.StatusNotFound)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(&book)
 }
 
-func DeleteBook(c *fiber.Ctx) {
-	c.Send("delete book")
+func DeleteBook(c *fiber.Ctx) error {
+	return c.SendString("delete book")
 }

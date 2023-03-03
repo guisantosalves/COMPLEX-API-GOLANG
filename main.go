@@ -4,9 +4,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 	"github.com/guisantosalves/go-api-fiber/src/database"
-	Router "github.com/guisantosalves/go-api-fiber/src/routes"
+	"github.com/guisantosalves/go-api-fiber/src/routes"
 	"github.com/joho/godotenv"
 )
 
@@ -29,8 +29,8 @@ func main() {
 	database.ConnectDB()
 
 	// default route
-	app.Get("/", func(c *fiber.Ctx) {
-		c.Send("Go api with fiber")
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("Go api with fiber")
 	})
 
 	// verify env
@@ -40,7 +40,7 @@ func main() {
 	}
 
 	// set routes and up the server
-	Router.SetRoutes(app)
-	app.Listen(PORT)
+	routes.SetRoutes(app)
+	app.Listen(":" + PORT)
 
 }
