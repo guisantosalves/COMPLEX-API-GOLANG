@@ -11,18 +11,25 @@ func GetBooks(c *fiber.Ctx) error {
 }
 
 func GetBookById(c *fiber.Ctx) error {
-	return c.SendString("getBooksbyid")
+	// array of Book
+	var books []models.Book{}
+	dta := database.DB.db
+
+	if result := dta.Find(&books); result.Error != nil {
+		return c.Status(fiber.StatusBadRequest).SendString(result.Error());
+	}
+
+	return c.Status(fiber)
 }
 
 func NewBook(c *fiber.Ctx) error {
 	// like an instance
 	body := models.Book{}
 	dta := database.DB.Db
-
 	// parsing body and mapping it into models.Book struct
 	if err := c.BodyParser(&body); err != nil {
 		// handling with error
-		return fiber.NewError(fiber.StatusBadRequest, err.Error())
+		return c.Status(fiber.StatusBadRequest).SendString(err.Error())
 	}
 
 	// make book receive all mapped data from body
@@ -32,8 +39,9 @@ func NewBook(c *fiber.Ctx) error {
 	book.Author = body.Author
 
 	//insert db
-	if result := dta.Create(&book); result != nil {
-		return fiber.NewError(fiber.StatusNotFound)
+	if result := dta.Create(&book); result.Error != nil {
+		logger.Default.LogMode(logger.Info)
+		panic(fiber.ErrInternalServerError)
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(&book)
