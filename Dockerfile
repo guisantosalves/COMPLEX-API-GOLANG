@@ -1,19 +1,12 @@
-#inherit all that functions from 1.16-alpine
-FROM golang:1.16-alpine
-# it creates a directory inside the image that we are building.
+FROM golang:1.20.1-alpine AS builder
 WORKDIR /app
-
 COPY go.mod ./
 COPY go.sum ./
-
-#execute it inside the image
 RUN go mod download
-
-# copying our source code
-COPY *.go ./
-
-#compile
-RUN go build -o /docker-gs-ping
-
-EXPOSE 3005
-
+COPY . ./
+RUN ls
+RUN go build -o /app/build/go-api-fiber
+FROM alpine:latest AS production
+COPY --from=builder /app/build .
+COPY --from=builder /app/.env .
+ENTRYPOINT ["./go-api-fiber"]

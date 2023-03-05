@@ -18,7 +18,7 @@ func ConnectDB() {
 
 	// change the user and password in another project
 	// host=localhost user=gorm password=gorm dbname=gorm port=9920 sslmode=disable TimeZone=Asia/Shanghai
-	dbURL := "host=localhost user=postgres password=123456 dbname=book port=5431 sslmode=disable"
+	dbURL := "host=databasePost user=postgres password=123456 dbname=book port=5432 sslmode=disable"
 
 	// "postgres://postgres:123456@localhost:5432/book"
 
